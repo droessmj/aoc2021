@@ -39,10 +39,7 @@ class BingoBoard:
     
     def calc_score(self, called_numbers):
         marked = self.all_numbers_set.intersection(set(called_numbers))
-        sum_marked = marked
         sum_unmarked = sum(list(self.all_numbers_set.difference(marked)))
-        print(sum_marked)
-        print(called_numbers[-1])
         return sum_unmarked * called_numbers[-1]
 
 def callNumber_returnIsWinner(called_numbers, all_bingo_boards):
@@ -51,15 +48,16 @@ def callNumber_returnIsWinner(called_numbers, all_bingo_boards):
     if len(called_numbers) < 5:
         return False
 
+    result_list = []
     for board in all_bingo_boards:
         if board.check_for_winner(called_numbers):
-            print(board)
-            # calculate value
-            val = board.calc_score(called_numbers)
-            return val
-        
-    # return result as False or winning value
-    return False
+            result_list.append(board)
+    
+    if result_list:
+        return result_list
+    else:
+        # return result as False or winning value
+        return False
 
 
 all_num_to_call = []
@@ -86,12 +84,23 @@ with open("./input.txt") as f:
             idx = 0
             board_lines = []
 
+print(f"All Bingo boards: {len(all_bingo_boards)}")
 call_idx = 0 
 called_numbers = []
-while True:
+last_board = None
+while len(all_bingo_boards) > 0:
+    if (call_idx == 99):
+        print(f"Remaining boards: {len(all_bingo_boards)}")
+
     called_numbers.append(all_num_to_call[call_idx])
-    result = callNumber_returnIsWinner(called_numbers, all_bingo_boards)
-    if result: 
-        print(result)
-        break
+    result_board_list = callNumber_returnIsWinner(called_numbers, all_bingo_boards)
+    if result_board_list: 
+        for board in result_board_list:
+            all_bingo_boards.remove(board)
+            last_board = board
+
     call_idx += 1
+
+print(last_board.calc_score(called_numbers))
+
+### part 1 solved
