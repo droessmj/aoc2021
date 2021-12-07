@@ -1,9 +1,18 @@
 import sys
 
+lookup_deltas = {}
+
+# (3, 6)
+def calc_deltas(n):
+    if n not in lookup_deltas:
+        delta_val = sum(range(1,n+1))
+        lookup_deltas[n] = delta_val
+    return lookup_deltas[n]
+
 def calc_distance_seed(seed, inputs, running_best):
     total = 0
     for i in inputs:
-        delta = abs(seed-i)
+        delta = calc_deltas(abs(seed-i))
         total += delta
 
         # bail early
