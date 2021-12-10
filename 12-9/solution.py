@@ -35,14 +35,17 @@ def get_non_nine_neighbors(board,r,c, board_len, row_len):
 
     viable_neighbors = []
     for neighbor in possible_neighbors: #TODO add a lookup table 
-        if board[r+neighbor[0]][c+neighbor[1]] != 9 and str(r+neighbor[0])+str(c+neighbor[1]) not in lookup:
-            viable_neighbors.append([r+neighbor[0],c+neighbor[1]])
-            lookup[str(r+neighbor[0])+str(c+neighbor[1])] = True
-    print(viable_neighbors)
+        if board[r+neighbor[0]][c+neighbor[1]] != 9:
+            #print(str(r+neighbor[0])+str(c+neighbor[1]) )
+            #print(board[r+neighbor[0]][c+neighbor[1]] )
+            if str(r+neighbor[0])+str(c+neighbor[1]) not in lookup:
+                lookup[str(r+neighbor[0])+str(c+neighbor[1])] = True
+                viable_neighbors.append([r+neighbor[0],c+neighbor[1]])
     return viable_neighbors
 
 def calc_basin_size(board,r,c,board_len,row_len):
     basin_size = 1
+    lookup[str(r)+str(c)] = True
     # look to all four locations, add value to check if exists and not 9
     viable_neighbors = get_non_nine_neighbors(board,r,c,board_len,row_len)
     idx = 0
@@ -50,7 +53,7 @@ def calc_basin_size(board,r,c,board_len,row_len):
         basin_size += 1
         viable_neighbors += get_non_nine_neighbors(board,viable_neighbors[idx][0],viable_neighbors[idx][1],board_len,row_len)
         idx += 1
-    print( basin_size )
+
     return basin_size
 
 in_file = 'test'
@@ -64,7 +67,7 @@ with open(f"./{in_file}.txt") as f:
         row = []
         line = line.strip()
         for c in line:
-            row.append(c)
+            row.append(int(c))
         board.append(row)
 
 risk = 0
@@ -84,12 +87,14 @@ while r < board_len:
 
 basin_sizes = []
 for point in basin_points:
+    lookup = {}
     # check if adjacent points are in basin 
     basin_size = calc_basin_size(board,point[0], point[1],board_len,row_len)
     basin_sizes.append(basin_size)
 
-basin_sizes.sort()
+basin_sizes.sort(reverse=True)
 print(basin_sizes)
-largest_3 = basin_sizes[3::-1]
+largest_3 = basin_sizes[0:3]
 
+print(largest_3)
 print(reduce(lambda a, b: a * b, largest_3))
