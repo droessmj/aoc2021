@@ -37,6 +37,7 @@ autocomplete_score = {
 
 count = 0
 good_lines = []
+good_line_stack = []
 with open(f"./{in_file}.txt") as f:
     for line in f:
         stack = []
@@ -49,15 +50,26 @@ with open(f"./{in_file}.txt") as f:
                 try:
                     p = stack.pop()
                     if p != pairs[c]:
-                        count+= score[c] 
                         line_good = False
                         break
                 except: # empty list with a closer
-                    count += score[c]
                     line_good = False
                     break
         if line_good:
             good_lines.append(line)
+            good_line_stack.append(stack)
 
-print(count)
-print(len(good_lines))
+
+all_scores = []
+for idx,line in enumerate(good_lines):
+    stack = good_line_stack[idx]
+    stack.reverse()
+    answer = []
+    score = 0
+    for c in stack:
+        answer.append(pairs[c])
+        score = score * 5 + autocomplete_score[pairs[c]]
+    all_scores.append(score)
+
+all_scores.sort()
+print(all_scores[int(len(all_scores) / 2)])
