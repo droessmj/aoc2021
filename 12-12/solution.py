@@ -43,11 +43,15 @@ class Node:
 
 class Route:
     nodes = []
+    small_count = {}
+    small_limit_reached = False
 
     def __init__(self, node = None):
         self.nodes = []
         if node:
             self.nodes.append(node)
+        self.small_count = {}
+        self.small_limit_reached = False
 
     def add_node(self,node):
         self.nodes.append(node)
@@ -59,7 +63,7 @@ class Route:
                 r += f"{node.val}->"
             else:
                 r += f"{node.val}"
-        return r
+        return f"{r}\n"
 
     def __repr__(self):
         return self.__str__()
@@ -103,12 +107,24 @@ class Graph:
         for next_node in self.map[cur_node]:
             route2 = copy.deepcopy(route)
 
-            if next_node in route2.nodes and not next_node.big:
+            # todo...this allows for all small caves to be hit up to two times
+            # but we can only hit a single small cave twice
+
+            if (next_node == 'start' or 
+                (next_node in route2.small_count and route2.small_limit_reached)):     
                 # if our next node is already in our list and isn't a big node
                 # we won't continue
                 pass
             else:
                 route2.add_node(next_node)
+
+                if not next_node.big:
+                    if next_node in route2.small_count:
+                        route2.small_count[next_node] += 1
+                        route2.small_limit_reached = True
+                    else:
+                        route2.small_count[next_node] = 1
+
                 if route2.nodes[-1] == 'end':
                     self.routes.append(route2)
                 else:
