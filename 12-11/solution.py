@@ -101,15 +101,16 @@ count = 0
 col_len = len(board)
 row_len = len(board[0])
 
-while cur_day < days_to_process:
+while True:
     count += process_day(board, col_len, row_len)
     cur_day += 1
 
-    printstr=''
+    # part 2
+    total_sum = 0
     for row in board:
-        for col in row:
-            printstr+=str(col)
-        printstr+='\n'
-    print(printstr)
-
-print(count)
+        total_sum += sum(row)
+        if total_sum > 0:
+            break
+    if total_sum == 0:
+        print(cur_day)
+        break
