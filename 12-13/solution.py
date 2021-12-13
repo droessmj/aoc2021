@@ -13,6 +13,7 @@ def fold(points, fold):
 
     for point in points:
         new_point = ()
+
         if plane == 'y' and point[1] > loc:
             new_point = (point[0],abs(point[1] - loc - new_height)) # 0,13 -> 0,0 for y=7
         elif plane == 'x' and point[0] > loc:
@@ -25,11 +26,11 @@ def fold(points, fold):
     return new_points
 
 
-in_file = 'test'
+in_file = 'input'
 if len(sys.argv) > 1:
     in_file = sys.argv[1]
 
-points = []
+points = set()
 folds = []
 with open(f"./{in_file}.txt") as f:
     for line in f:
@@ -37,7 +38,7 @@ with open(f"./{in_file}.txt") as f:
 
         if ',' in line:
             point = line.split(',')
-            points.append((int(point[0]),int(point[1])))
+            points.add((int(point[0]),int(point[1])))
         elif '=' in line:
             parts = line.split(' ')
             fold_parts = parts[2].split('=')
@@ -49,14 +50,13 @@ new_points = fold(points, folds[0])
 # print(len(new_points))
 
 # part 2
-count = 0
 for f in folds:
     print(f)
     points = fold(points, f)
-    count+=1
 
 X = [p[0] for p in points]
-Y = [p[1] for p in points]
+Y = [-1*p[1] for p in points]
 
+print(len(points))
 plt.scatter(X,Y)
 plt.show()
