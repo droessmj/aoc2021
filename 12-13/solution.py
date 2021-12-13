@@ -1,6 +1,8 @@
 import sys
+import matplotlib.pyplot as plt
 
-def fold(points, plane, loc):
+def fold(points, fold):
+    plane, loc = fold[0], fold[1]
     new_points = set()
 
     cur_height = max([p[1] for p in points])
@@ -42,10 +44,19 @@ with open(f"./{in_file}.txt") as f:
             folds.append((fold_parts[0],int(fold_parts[1])))
             
 
-print(points)
-print(folds)
-new_points = fold(points, folds[0][0], folds[0][1])
-print(new_points)
+new_points = fold(points, folds[0])
 # part 1
-print(len(new_points))
+# print(len(new_points))
 
+# part 2
+count = 0
+for f in folds:
+    print(f)
+    points = fold(points, f)
+    count+=1
+
+X = [p[0] for p in points]
+Y = [p[1] for p in points]
+
+plt.scatter(X,Y)
+plt.show()
