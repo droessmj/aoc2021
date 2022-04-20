@@ -1,0 +1,13 @@
+apiVersion: v2
+appVersion: 0.0.1
+description: Lacework admission controller using Lacework proxy scanner
+keywords:
+- admission-controller
+- runtime-security
+- lacework
+maintainers:
+- email: chitra.kumar@lacework.net
+  name: chitrapkumar
+name: admission-controller
+type: application
+version: 0.1.0
